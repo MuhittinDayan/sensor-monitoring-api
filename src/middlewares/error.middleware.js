@@ -20,9 +20,14 @@ export const errorHandler = ((err, _req, res, _next) => {
     if (err.name === "CastError" && err.kind === "ObjectId") {
         return res.status(400).json({ message: "Invalid ID format." });
     }
+    if (err.code === 11000) {
+        return res.status(409).json({ message: "Email is already registered." })
+    }
+    if (statusCode >= 500) console.error(err);
     const message = statusCode >= 500
         ? "An unexpected error occurred."
-        : err.message;
+        : err.message
+
 
     return res.status(statusCode).json({ message });
 });
